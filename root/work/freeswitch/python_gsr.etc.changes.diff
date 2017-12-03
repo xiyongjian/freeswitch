@@ -1,0 +1,71 @@
+diff --git a/freeswitch/autoload_configs/modules.conf.xml b/freeswitch/autoload_configs/modules.conf.xml
+index e40fca5..df540bc 100644
+--- a/freeswitch/autoload_configs/modules.conf.xml
++++ b/freeswitch/autoload_configs/modules.conf.xml
+@@ -119,7 +119,7 @@
+     <!-- Languages -->
+     <load module="mod_v8"/>
+     <!-- <load module="mod_perl"/> -->
+-    <!-- <load module="mod_python"/> -->
++    <load module="mod_python"/>
+     <!-- <load module="mod_java"/> -->
+     <load module="mod_lua"/>
+ 
+diff --git a/freeswitch/dialplan/default.xml b/freeswitch/dialplan/default.xml
+index faeb13d..fd4c699 100644
+--- a/freeswitch/dialplan/default.xml
++++ b/freeswitch/dialplan/default.xml
+@@ -268,6 +268,26 @@
+     <extension name="Local_Extension">
+       <condition field="destination_number" expression="^(10[01][0-9])$">
+ 	<action application="export" data="dialed_extension=$1"/>
++	<!-- for recording phone call -->
++		<action application="set" data="RECORD_TITLE=Recording ${destination_number} ${caller_id_number} ${strftime(%Y-%m-%d %H:%M)}"/>
++		<action application="set" data="RECORD_COPYRIGHT=(c) 2011"/>
++		<action application="set" data="RECORD_SOFTWARE=FreeSWITCH"/>
++		<action application="set" data="RECORD_ARTIST=FreeSWITCH"/>
++		<action application="set" data="RECORD_COMMENT=FreeSWITCH"/>
++		<action application="set" data="RECORD_DATE=${strftime(%Y-%m-%d %H:%M)}"/>
++		<action application="set" data="RECORD_STEREO=true"/>
++
++		<action application="set" data="media_bug_answer_req=true"/>
++		<!-- <action application="export" data="execute_on_answer=record_session $${recordings_dir}/${strftime(%Y%m%d%H%M%S)}_${caller_id_number}.wav"/> -->
++		<action application="set" data="recording_follow_transfer=true"/>
++
++		<action application="set" data="recording_file=$${recordings_dir}/archive/${strftime(%Y-%m-%d-%H-%M-%S)}_${destination_number}_${caller_id_number}.wav"/>
++		<action application="record_session" data="$${recordings_dir}/archive/${strftime(%Y-%m-%d-%H-%M-%S)}_${destination_number}_${caller_id_number}.wav"/>
++		<action application="set" data="session_in_hangup_hook=true"/>
++		<action application="set" data="api_hangup_hook=python call_recogn"/>
++		<action application="python" data="call_recogn"/>
++
++
+ 	<!-- bind_meta_app can have these args <key> [a|b|ab] [a|b|o|s] <app> -->
+ 	<action application="bind_meta_app" data="1 b s execute_extension::dx XML features"/>
+ 	<action application="bind_meta_app" data="2 b s record_session::$${recordings_dir}/${caller_id_number}.${strftime(%Y-%m-%d-%H-%M-%S)}.wav"/>
+@@ -287,10 +307,15 @@
+ 	<action application="hash" data="insert/${domain_name}-last_dial_ext/global/${uuid}"/>
+ 	<!--<action application="export" data="nolocal:rtp_secure_media=${user_data(${dialed_extension}@${domain_name} var rtp_secure_media)}"/>-->
+ 	<action application="hash" data="insert/${domain_name}-last_dial/${called_party_callgroup}/${uuid}"/>
++		<!-- <action application="set" data="exec_after_bridge_app=python"/> -->
++		<!-- <action application="set" data="exec_after_bridge_arg=call_recogn"/> -->
++		<!-- speech recognition -->
++		<!-- <action application="python" data="call_recogn"/> -->
+ 	<action application="bridge" data="user/${dialed_extension}@${domain_name}"/>
+ 	<action application="answer"/>
+ 	<action application="sleep" data="1000"/>
+ 	<action application="bridge" data="loopback/app=voicemail:default ${domain_name} ${dialed_extension}"/>
++
+       </condition>
+     </extension>
+ 
+diff --git a/freeswitch/vars.xml b/freeswitch/vars.xml
+index 9ed2a11..46ffab1 100644
+--- a/freeswitch/vars.xml
++++ b/freeswitch/vars.xml
+@@ -444,4 +444,6 @@
+   <X-PRE-PROCESS cmd="set" data="video_mute_png=$${images_dir}/default-mute.png"/>
+   <X-PRE-PROCESS cmd="set" data="video_no_avatar_png=$${images_dir}/default-avatar.png"/>
+ 
++  <X-PRE-PROCESS cmd="set" data="recordings_dir=/tmp/recording"/>
++      
+ </include>

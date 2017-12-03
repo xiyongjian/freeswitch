@@ -41,8 +41,8 @@ def handler(session,args):
 	
     consoleLog("info", "call_recogn handler - setup HangupHook to recognite speech\n")
     # result = session.setHangupHook(hangup_hook)
-    session.setHangupHook(hangup_hook)
-    consoleLog("info", "call_recogn handler - setup HangupHook DONE\n")
+    # -- seems no use -- #session.setHangupHook(hangup_hook)
+    consoleLog("info", "call_recogn handler - SKIP setup HangupHook DONE\n")
     consoleLog("info", "call_recogn handler - session %s\n" % str(dir(session)).replace(",", ",\n"))
 
 

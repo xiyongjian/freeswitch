@@ -1,0 +1,4 @@
+
+setup voice recording, and target folder must be in proper 'chmod' or 'chown'
+
+owner be freeswitch

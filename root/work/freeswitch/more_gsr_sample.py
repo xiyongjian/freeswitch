@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# from : https://github.com/Uberi/speech_recognition/blob/master/examples/extended_results.py
+
 from pprint import pprint
 
 import speech_recognition as sr

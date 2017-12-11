@@ -22,9 +22,7 @@ with sr.AudioFile(AUDIO_FILE) as source:
 
 # GOOGLE_CLOUD_SPEECH_CREDENTIALS = r"""INSERT THE CONTENTS OF THE GOOGLE CLOUD SPEECH JSON CREDENTIALS FILE HERE"""
 GOOGLE_CLOUD_SPEECH_CREDENTIALS = r"""
-{
-KEY HERE
-}
+TO BE ...
 """
 
 # recognize speech using Google Speech Recognition

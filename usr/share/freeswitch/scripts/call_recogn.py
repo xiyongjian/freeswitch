@@ -23,10 +23,16 @@ def recogn_file(wav_file) :
         audio = r.record(source)  # read the entire audio file
 
     rsl_file = wav_file + ".txt"
+
+    # GOOGLE_CLOUD_SPEECH_CREDENTIALS = r"""INSERT THE CONTENTS OF THE GOOGLE CLOUD SPEECH JSON CREDENTIALS FILE HERE"""
+    GOOGLE_CLOUD_SPEECH_CREDENTIALS = r"""
+TO BE....
+    """
     
     # recognize speech using Google Speech Recognition
     result = ""
     try:
+        # result = r.recognize_google_cloud(audio, credentials_json=GOOGLE_CLOUD_SPEECH_CREDENTIALS, show_all=True)
 	result = r.recognize_google(audio)
         consoleLog("info", "call_recogn recogn_file - Google Speech Recognition result : %s\n" % str(result))
         consoleLog("info", "call_recogn recogn_file - write result to : %s\n" % rsl_file)
@@ -78,15 +84,15 @@ def fsapi(session,stream,event,args):
 
     payld = json.dumps(cdr, indent=4)
 
-    # write JSON to file first
-    with open(rec_file + ".json", 'w') as the_file:
-        the_file.write(payld)
-
-    # post JSON to REST API (CDR)
-    consoleLog("info", "json payload : %s\n" % payld)
-    consoleLog("info", "post json to url : %s" % cdr_api_url)
-    response = requests.post(cdr_api_url,data=payld)
-    consoleLog("info", "post result status : %d" % response.status_code)
-    consoleLog("info", "post result json : %s" % json.dumps(response.json(), indent=4))
+#    # write JSON to file first
+#    with open(rec_file + ".json", 'w') as the_file:
+#        the_file.write(payld)
+#
+#    # post JSON to REST API (CDR)
+#    consoleLog("info", "json payload : %s\n" % payld)
+#    consoleLog("info", "post json to url : %s" % cdr_api_url)
+#    response = requests.post(cdr_api_url,data=payld)
+#    consoleLog("info", "post result status : %d" % response.status_code)
+#    consoleLog("info", "post result json : %s" % json.dumps(response.json(), indent=4))
 
 
